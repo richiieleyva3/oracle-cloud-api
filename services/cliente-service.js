@@ -1,4 +1,5 @@
 const oracledb = require('oracledb');
+oracledb.initOracleClient({ libDir: '/usr/lib/oracle/19.19/client64/lib' });
 
 oracledb.outFormat = oracledb.OBJECT;
 oracledb.fetchAsString = [oracledb.CLOB];
@@ -12,13 +13,17 @@ module.exports = class ClienteService {
     static async init() {
         console.log(`process.env.DB_USER: ${process.env.DB_USER}`);
         console.log(`process.env.DB_PASSWORD: ${process.env.DB_PASSWORD}`);
-        console.log(`process.env.CONNECT_STRING: ${process.env.CONNECT_STRING}`);
+        console.log(`process.env.CONNECT_STRING: lib'${process.env.CONNECT_STRING}`);
+        console.log(`process.env.TNS_ADMIN: ${process.env.TNS_ADMIN}`);
 
         console.log('Creando pool de conexiones...')
         await oracledb.createPool({
             user: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             connectString: process.env.CONNECT_STRING,
+            tnsAdmin: process.env.TNS_ADMIN,
+            walletLocation: process.env.TNS_ADMIN,
+            externalAuth: false,
         });
         console.log('Pool de conexiones creado.')
         return new ClienteService();
